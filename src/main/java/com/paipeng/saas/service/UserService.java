@@ -13,6 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,9 @@ public class UserService extends BaseService {
     private final static Logger logger = LogManager.getLogger(UserService.class.getSimpleName());
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ApplicationConfig applicationConfig;
@@ -116,5 +121,43 @@ public class UserService extends BaseService {
         } else {
             throw new Exception("400");
         }
+    }
+
+    public User save(User user) {
+        // Encrypt the password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User justSavedUser = userRepository.save(user);
+        logger.info("User:" + justSavedUser.getUsername() + " saved.");
+        return justSavedUser;
+    }
+
+    public String findLoggedInUsername() {
+        Object userDetails = SecurityContextHolder.getContext()
+                .getAuthentication().getDetails();
+        if (userDetails instanceof UserDetails) {
+            String username = ((UserDetails) userDetails).getUsername();
+            logger.info("Logged in username:" + username);
+            return username;
+        }
+        return null;
+    }
+
+    public User findByUsernameAndTenantname(String username, String tenant) {
+        User user = userRepository.findByUsernameAndTenantname(username,
+                tenant);
+        if (user == null) {
+            throw new UsernameNotFoundException(
+                    String.format(
+                            "Username not found for domain, "
+                                    + "username=%s, tenant=%s",
+                            username, tenant));
+        }
+        logger.info("Found user with username:" + user.getUsername()
+                + " from tenant:" + user.getTenant());
+        return user;
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 }

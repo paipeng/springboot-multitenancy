@@ -1,0 +1,47 @@
+logging:
+  level:
+    root: ERROR
+    org.apache.tomcat: INFO
+    org.apache.tomcat.util.net: WARN
+
+security:
+  jwt:
+    secret: 5161127a80ff47a1855176c345a1de39833b486ea3dd40629081ab0370a1632c87496492fb634c60a458182c69a7f0d0
+  user:
+    name: user
+    password: password
+spring:
+  jpa:
+    database: mysql
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: update
+
+multitenancy:
+  mtapp:
+    master:
+      datasource:
+        url: jdbc:mysql://localhost:3306/authorization_db?useSSL=false
+        username: authorization
+        password: ZXR6E70JpBa1
+        driverClassName: com.mysql.jdbc.Driver
+        connectionTimeout: 20000
+        maxPoolSize: 10
+        idleTimeout: 300000
+        minIdle: 10
+        poolName: masterdb-connection-pool
+
+    dataSources:
+      -
+        tenantId: tenant_1
+        url: jdbc:mysql://localhost:3306/authorization_db?useSSL=false
+        username: authorization
+        password: ZXR6E70JpBa1
+        driverClassName: com.mysql.jdbc.Driver
+      -
+        tenantId: tenant_2
+        url: jdbc:mysql://localhost:3306/authorization_db?useSSL=false
+        username: authorization
+        password: ZXR6E70JpBa1
+        driverClassName: com.mysql.jdbc.Driver
