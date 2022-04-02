@@ -1,0 +1,73 @@
+import java.time.LocalDateTime
+
+plugins {
+    id 'org.springframework.boot' version '2.6.1'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.paipeng.saas'
+version = '1.0.0'
+sourceCompatibility = '1.8'
+
+def applicationName = 'SpringBoot Restful API Demo'
+springBoot {
+    buildInfo()
+    mainClass = 'com.paipeng.springboot.Application'
+}
+
+repositories {
+    //mavenCentral()
+    maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
+}
+
+configurations.all {
+    //all*.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+dependencies {
+
+    //implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.22'
+    //implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.22'
+    //implementation(group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3')
+    //implementation 'ch.qos.logback:logback-classic:1.2.3'
+
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation('io.springfox:springfox-swagger2:2.8.0')
+    implementation('io.springfox:springfox-swagger-ui:2.8.0')
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.24.5'
+    testImplementation group: 'junit', name: 'junit', version: '4.13.2'
+}
+
+task updateVersion {
+    doLast {
+        ant.propertyfile(file: 'src/main/resources/version.properties') {
+            entry( key: "app.create_date", value: LocalDateTime.now())
+            entry( key: "app.version", value: version)
+            entry( key: "app.name", value: applicationName)
+        }
+    }
+}
+bootJar {
+    //baseName = applicationName
+    //enabled = false
+}
+tasks.compileJava {
+    dependsOn(updateVersion)
+}
+
+
+test {
+    useJUnitPlatform()
+}
+
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
