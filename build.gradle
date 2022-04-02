@@ -39,8 +39,12 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.springframework.data:spring-data-r2dbc'
+    // https://mvnrepository.com/artifact/org.liquibase/liquibase-core
+    implementation group: 'org.liquibase', name: 'liquibase-core', version: '4.9.1'
 
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
     implementation 'mysql:mysql-connector-java'
 
     // https://mvnrepository.com/artifact/com.auth0/java-jwt
