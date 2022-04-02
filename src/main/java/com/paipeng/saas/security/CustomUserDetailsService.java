@@ -4,7 +4,6 @@ import com.paipeng.saas.entity.CustomUserDetails;
 import com.paipeng.saas.entity.Role;
 import com.paipeng.saas.entity.User;
 import com.paipeng.saas.repository.UserRepository;
-import com.paipeng.saas.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
