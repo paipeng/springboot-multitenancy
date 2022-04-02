@@ -22,7 +22,14 @@ spring:
     generate-ddl: false
     hibernate:
       ddl-auto: update
-
+    properties:
+      hibernate:
+        format_sql: true
+  liquibase:
+    enabled: false
+    drop-first: false
+    change-log: classpath:db/changelog/db-changelog.yaml
+    default-schema: public
 multitenancy:
   mtapp:
     master:
