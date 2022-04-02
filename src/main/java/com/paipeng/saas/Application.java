@@ -2,15 +2,18 @@ package com.paipeng.saas;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.Arrays;
 
-@SpringBootApplication(scanBasePackages= {"com.paipeng.saas"})
+@EnableAutoConfiguration
+@SpringBootApplication(exclude = { R2dbcAutoConfiguration.class, DataSourceAutoConfiguration.class })
 //@EnableJpaRepositories
 //@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 public class Application {
