@@ -9,7 +9,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -143,7 +142,6 @@ public class UserService extends BaseService {
         return null;
     }
 
-    //@Query("select p from User p where p.username = :username and p.tenant = :tenant")
     public User findByUsernameAndTenantname(String username, String tenant) {
         User user = userRepository.findByUsernameAndTenantname(username,
                 tenant);
