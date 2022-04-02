@@ -10,7 +10,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.Arrays;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages= {"com.paipeng.saas"})
+//@EnableJpaRepositories
 //@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 public class Application {
     //private static final Logger logger = LoggerFactory.getLogger(Application.class);
