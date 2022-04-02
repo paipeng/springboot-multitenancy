@@ -13,7 +13,7 @@ sourceCompatibility = '1.8'
 def applicationName = 'SpringBoot Restful API Demo'
 springBoot {
     buildInfo()
-    mainClass = 'com.paipeng.springboot.Application'
+    mainClass = 'com.paipeng.saas.Application'
 }
 
 repositories {
