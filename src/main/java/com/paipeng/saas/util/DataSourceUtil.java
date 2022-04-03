@@ -2,7 +2,7 @@ package com.paipeng.saas.util;
 
 import javax.sql.DataSource;
 
-import com.paipeng.saas.manager.entity.MasterTenant;
+import com.paipeng.saas.entity.MasterTenant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
