@@ -21,7 +21,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/authorization_db
     username: authorization
-    password: 
+    password: ZXR6E70JpBa1
 
   jpa:
     database: mysql
@@ -41,26 +41,12 @@ multitenancy:
   mtapp:
     master:
       datasource:
-        url: jdbc:mysql://localhost:3306/authorization_db?useSSL=false
-        username: authorization
-        password: ZXR6E70JpBa1
+        url: jdbc:mysql://localhost:3306/master_db
+        username: master
+        password: Avt85288,akO
         driverClassName: com.mysql.cj.jdbc.Driver
         connectionTimeout: 20000
         maxPoolSize: 10
         idleTimeout: 300000
         minIdle: 10
         poolName: masterdb-connection-pool
-
-    dataSources:
-      -
-        tenantId: tenant_1
-        url: jdbc:mysql://localhost:3306/tenant_1_db?useSSL=false
-        username: tenant_1
-        password: BtJ3iUORJ6V*
-        driverClassName: com.mysql.cj.jdbc.Driver
-      -
-        tenantId: tenant_2
-        url: jdbc:mysql://localhost:3306/tenant_2_db?useSSL=false
-        username: tenant_2
-        password: Qo6ny.0!th1V
-        driverClassName: com.mysql.cj.jdbc.Driver

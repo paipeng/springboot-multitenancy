@@ -14,10 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import java.util.Arrays;
 
-@EnableAutoConfiguration
-@SpringBootApplication(exclude = { R2dbcAutoConfiguration.class})
-@ComponentScan({"com.paipeng.saas", "com.paipeng.saas.manager.config"})
-@EntityScan({"com.paipeng.saas.entity" , "com.paipeng.saas.manager.entity"})
+@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 //@EnableJpaRepositories
 //@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 public class Application {

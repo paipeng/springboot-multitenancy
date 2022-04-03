@@ -1,13 +1,29 @@
-package com.paipeng.saas.config;
+/*
+ * Copyright 2018 onwards - Sunit Katkar (sunitkatkar@gmail.com)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.paipeng.saas.master.config;
 
-import com.paipeng.saas.entity.MasterTenant;
-import com.paipeng.saas.repository.MasterTenantRepository;
-import com.zaxxer.hikari.HikariDataSource;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import java.util.Properties;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -19,20 +35,27 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-import java.util.Properties;
+import com.paipeng.saas.master.model.MasterTenant;
+import com.paipeng.saas.master.repository.MasterTenantRepository;
+import com.zaxxer.hikari.HikariDataSource;
 
-
+/**
+ * Configuration of the master database which holds information about tenants in
+ * the application.
+ * 
+ * @author Sunit Katkar, sunitkatkar@gmail.com
+ *         (https://sunitkatkar.blogspot.com/)
+ * @since ver 1.0 (May 2018)
+ * @version 1.0
+ */
 @Configuration
 @EnableTransactionManagement
-@EntityScan({"com.paipeng.saas.entity"})
-@EnableJpaRepositories(basePackages = {"com.paipeng.saas.repository"},
-        entityManagerFactoryRef = "masterEntityManagerFactory",
-        transactionManagerRef = "masterTransactionManager")
-
+@EnableJpaRepositories(basePackages = { "com.paipeng.saas.master.model",
+        "com.paipeng.saas.master.repository" }, entityManagerFactoryRef = "masterEntityManagerFactory", transactionManagerRef = "masterTransactionManager")
 public class MasterDatabaseConfig {
-    private final static Logger logger = LogManager.getLogger(MasterDatabaseConfig.class.getSimpleName());
+
+    private static final Logger LOG = LoggerFactory
+            .getLogger(MasterDatabaseConfig.class);
 
     /**
      * Master database configuration properties like username, password, etc.
@@ -46,12 +69,13 @@ public class MasterDatabaseConfig {
      * <br/>
      * Note that using names for beans is not mandatory but it is a good
      * practice to ensure that the intended beans are being used where required.
-     *
+     * 
      * @return
      */
     @Bean(name = "masterDataSource")
     public DataSource masterDataSource() {
-        logger.info("Setting up masterDataSource with: "
+
+        LOG.info("Setting up masterDataSource with: "
                 + masterDbProperties.toString());
 
         HikariDataSource ds = new HikariDataSource();
@@ -74,7 +98,7 @@ public class MasterDatabaseConfig {
 
         // Maximum time that a connection is allowed to sit idle in the pool
         ds.setIdleTimeout(masterDbProperties.getIdleTimeout());
-        logger.info("Setup of masterDataSource succeeded.");
+        LOG.info("Setup of masterDataSource succeeded.");
         return ds;
     }
 
@@ -86,7 +110,7 @@ public class MasterDatabaseConfig {
      * Note the <b>{@literal @}Primary</b> annotation which tells Spring boot to
      * create this entity manager as the first thing when starting the
      * application.
-     *
+     * 
      * @return
      */
     @Primary
@@ -99,8 +123,8 @@ public class MasterDatabaseConfig {
 
         // The master tenant entity and repository need to be scanned
         em.setPackagesToScan(
-                new String[]{MasterTenant.class.getPackage().getName(),
-                        MasterTenantRepository.class.getPackage().getName()});
+                new String[] { MasterTenant.class.getPackage().getName(),
+                        MasterTenantRepository.class.getPackage().getName() });
         // Setting a name for the persistence unit as Spring sets it as
         // 'default' if not defined
         em.setPersistenceUnitName("masterdb-persistence-unit");
@@ -111,7 +135,7 @@ public class MasterDatabaseConfig {
 
         // Set the hibernate properties
         em.setJpaProperties(hibernateProperties());
-        logger.info("Setup of masterEntityManagerFactory succeeded.");
+        LOG.info("Setup of masterEntityManagerFactory succeeded.");
         return em;
     }
 
@@ -122,7 +146,7 @@ public class MasterDatabaseConfig {
      * Note the <b>{@literal @}Qualifier</b> annotation to ensure that the
      * <tt>masterEntityManagerFactory</tt> is used for setting up the
      * transaction manager.
-     *
+     * 
      * @param emf
      * @return
      */
@@ -140,7 +164,7 @@ public class MasterDatabaseConfig {
      * adding a corresponding PersistenceExceptionTranslationAdvisor to the
      * exposed proxy (either an existing AOP proxy or a newly generated proxy
      * that implements all of the target's interfaces).
-     *
+     * 
      * @return
      */
     @Bean
@@ -150,7 +174,7 @@ public class MasterDatabaseConfig {
 
     /**
      * The properties for configuring the JPA provider Hibernate.
-     *
+     * 
      * @return
      */
     private Properties hibernateProperties() {
