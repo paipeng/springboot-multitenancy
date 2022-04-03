@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -21,6 +23,10 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(authenticationProvider());
+    }
     /**
      * This is where access to various resources (urls) in the application is
      * defined
@@ -60,10 +66,12 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
         return filter;
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth)
-            throws Exception {
-        auth.authenticationProvider(authProvider());
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        //AuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        //authProvider.setUserDetailsService(userDetailsService());
+        //authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider();
     }
 
     /**
@@ -74,8 +82,7 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     public AuthenticationProvider authProvider() {
         // The custom authentication provider defined for this app
-        CustomUserDetailsAuthenticationProvider provider = new CustomUserDetailsAuthenticationProvider(
-                passwordEncoder(), userDetailsService);
+        CustomUserDetailsAuthenticationProvider provider = new CustomUserDetailsAuthenticationProvider(passwordEncoder(), userDetailsService);
         return provider;
     }
 
