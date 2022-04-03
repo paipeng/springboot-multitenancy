@@ -1,7 +1,7 @@
-package com.paipeng.saas.manager.config;
+package com.paipeng.saas.config;
 
-import com.paipeng.saas.manager.entity.MasterTenant;
-import com.paipeng.saas.manager.repository.MasterTenantRepository;
+import com.paipeng.saas.entity.MasterTenant;
+import com.paipeng.saas.repository.MasterTenantRepository;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +23,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
+
+@Configuration
+@EnableTransactionManagement
+@EntityScan({"com.paipeng.saas.entity"})
+@EnableJpaRepositories(basePackages = {"com.paipeng.saas.repository"},
+        entityManagerFactoryRef = "masterEntityManagerFactory",
+        transactionManagerRef = "masterTransactionManager")
 
 public class MasterDatabaseConfig {
     private final static Logger logger = LogManager.getLogger(MasterDatabaseConfig.class.getSimpleName());

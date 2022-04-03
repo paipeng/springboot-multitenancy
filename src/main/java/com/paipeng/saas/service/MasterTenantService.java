@@ -1,7 +1,7 @@
-package com.paipeng.saas.manager.service;
+package com.paipeng.saas.service;
 
-import com.paipeng.saas.manager.entity.MasterTenant;
-import com.paipeng.saas.manager.repository.MasterTenantRepository;
+import com.paipeng.saas.entity.MasterTenant;
+import com.paipeng.saas.repository.MasterTenantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

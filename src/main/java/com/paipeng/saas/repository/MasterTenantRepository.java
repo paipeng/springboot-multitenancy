@@ -1,6 +1,6 @@
-package com.paipeng.saas.manager.repository;
+package com.paipeng.saas.repository;
 
-import com.paipeng.saas.manager.entity.MasterTenant;
+import com.paipeng.saas.entity.MasterTenant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

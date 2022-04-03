@@ -1,4 +1,4 @@
-package com.paipeng.saas.manager.entity;
+package com.paipeng.saas.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
