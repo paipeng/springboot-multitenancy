@@ -15,7 +15,14 @@ security:
   user:
     name: user
     password: password
+
+
 spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/authorization_db
+    username: authorization
+    password: 
+
   jpa:
     database: mysql
     show-sql: true
