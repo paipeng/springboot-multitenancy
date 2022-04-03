@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -24,8 +25,9 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = { "com.sunitkatkar.blogspot.master.model",
-        "com.paipeng.saas.manager.repository" }, entityManagerFactoryRef = "masterEntityManagerFactory", transactionManagerRef = "masterTransactionManager")
+@EntityScan({"com.paipeng.saas.entity" , "com.paipeng.saas.manager.entity"})
+@EnableJpaRepositories(basePackages = {"com.paipeng.saas.repository",
+        "com.paipeng.saas.manager.repository"}, entityManagerFactoryRef = "masterEntityManagerFactory", transactionManagerRef = "masterTransactionManager")
 public class MasterDatabaseConfig {
     private final static Logger logger = LogManager.getLogger(MasterDatabaseConfig.class.getSimpleName());
 
@@ -94,8 +96,8 @@ public class MasterDatabaseConfig {
 
         // The master tenant entity and repository need to be scanned
         em.setPackagesToScan(
-                new String[] { MasterTenant.class.getPackage().getName(),
-                        MasterTenantRepository.class.getPackage().getName() });
+                new String[]{MasterTenant.class.getPackage().getName(),
+                        MasterTenantRepository.class.getPackage().getName()});
         // Setting a name for the persistence unit as Spring sets it as
         // 'default' if not defined
         em.setPersistenceUnitName("masterdb-persistence-unit");
