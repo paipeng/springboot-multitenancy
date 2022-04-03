@@ -180,7 +180,7 @@ public class MasterDatabaseConfig {
     private Properties hibernateProperties() {
         Properties properties = new Properties();
         properties.put(org.hibernate.cfg.Environment.DIALECT,
-                "org.hibernate.dialect.MySQL5Dialect");
+                "org.hibernate.dialect.MySQL8Dialect");
         properties.put(org.hibernate.cfg.Environment.SHOW_SQL, true);
         properties.put(org.hibernate.cfg.Environment.FORMAT_SQL, true);
         properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, "update");
