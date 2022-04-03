@@ -23,11 +23,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-@Configuration
-@EnableTransactionManagement
-@EntityScan({"com.paipeng.saas.entity" , "com.paipeng.saas.manager.entity"})
-@EnableJpaRepositories(basePackages = {"com.paipeng.saas.repository",
-        "com.paipeng.saas.manager.repository"}, entityManagerFactoryRef = "masterEntityManagerFactory", transactionManagerRef = "masterTransactionManager")
+
 public class MasterDatabaseConfig {
     private final static Logger logger = LogManager.getLogger(MasterDatabaseConfig.class.getSimpleName());
 
