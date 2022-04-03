@@ -151,6 +151,7 @@ public class MasterDatabaseConfig {
      * @return
      */
     @Bean(name = "masterTransactionManager")
+    @Primary
     public JpaTransactionManager masterTransactionManager(
             @Qualifier("masterEntityManagerFactory") EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
