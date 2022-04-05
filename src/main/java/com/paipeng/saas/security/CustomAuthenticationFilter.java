@@ -24,6 +24,7 @@ public class CustomAuthenticationFilter
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
+        logger.info("attemptAuthentication");
         if (!request.getMethod().equals("POST")) {
             throw new AuthenticationServiceException(
                     "Authentication method not supported: "
@@ -47,10 +48,13 @@ public class CustomAuthenticationFilter
      */
     private CustomAuthenticationToken getAuthRequest(
             HttpServletRequest request) {
+        logger.info("getAuthRequest");
         String username = obtainUsername(request);
         String password = obtainPassword(request);
         String tenant = obtainTenant(request);
-
+        logger.info("username: " + username);
+        logger.info("password: " + password);
+        logger.info("tenant: " + tenant);
         if (username == null) {
             username = "";
         }
@@ -69,6 +73,7 @@ public class CustomAuthenticationFilter
      * @return
      */
     private String obtainTenant(HttpServletRequest request) {
+        logger.info("obtainTenant: " + request);
         return request.getParameter(SPRING_SECURITY_FORM_TENANT_NAME_KEY);
     }
 }

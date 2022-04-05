@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(value = "/")
 public class LoginController {
     private final static Logger logger = LogManager.getLogger(LoginController.class.getSimpleName());
     @Autowired
@@ -16,6 +17,7 @@ public class LoginController {
 
     @PostMapping(value = "/login", produces = {"application/json;charset=UTF-8"})
     public User login(@NotNull @RequestBody User user) throws Exception {
+        logger.trace("login" + user);
         return userService.login(user);
     }
 

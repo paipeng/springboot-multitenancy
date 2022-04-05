@@ -50,7 +50,7 @@ import com.paipeng.saas.util.TenantContextHolder;
 public class DataSourceBasedMultiTenantConnectionProviderImpl
         extends AbstractDataSourceBasedMultiTenantConnectionProviderImpl {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DataSourceBasedMultiTenantConnectionProviderImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(DataSourceBasedMultiTenantConnectionProviderImpl.class);
 
     private static final long serialVersionUID = 1L;
 
@@ -67,12 +67,13 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
 
     @Override
     protected DataSource selectAnyDataSource() {
+        logger.info("selectAnyDataSource");
         // This method is called more than once. So check if the data source map
         // is empty. If it is then rescan master_tenant table for all tenant
         // entries.
         if (dataSourcesMtApp.isEmpty()) {
             List<MasterTenant> masterTenants = masterTenantRepo.findAll();
-            LOG.info(">>>> selectAnyDataSource() -- Total tenants:" + masterTenants.size());
+            logger.info(">>>> selectAnyDataSource() -- Total tenants:" + masterTenants.size());
             for (MasterTenant masterTenant : masterTenants) {
                 dataSourcesMtApp.put(masterTenant.getTenantId(),
                         DataSourceUtil.createAndConfigureDataSource(masterTenant));
@@ -85,12 +86,12 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
     protected DataSource selectDataSource(String tenantIdentifier) {
         // If the requested tenant id is not present check for it in the master
         // database 'master_tenant' table
-
+        logger.info("selectDataSource: " + tenantIdentifier);
         tenantIdentifier = initializeTenantIfLost(tenantIdentifier);
 
         if (!this.dataSourcesMtApp.containsKey(tenantIdentifier)) {
             List<MasterTenant> masterTenants = masterTenantRepo.findAll();
-            LOG.info(
+            logger.info(
                     ">>>> selectDataSource() -- tenant:" + tenantIdentifier + " Total tenants:" + masterTenants.size());
             for (MasterTenant masterTenant : masterTenants) {
 				if (this.dataSourcesMtApp.containsKey(masterTenant.getTenantId())) {
@@ -102,7 +103,7 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
         }
             //check again if tenant exist in map after rescan master_db, if not, throw UsernameNotFoundException
                     if (!this.dataSourcesMtApp.containsKey(tenantIdentifier)) {
-            LOG.warn("Trying to get tenant:" + tenantIdentifier + " which was not found in master db after rescan");
+                        logger.warn("Trying to get tenant:" + tenantIdentifier + " which was not found in master db after rescan");
             throw new UsernameNotFoundException(
                     String.format(
                             "Tenant not found after rescan, "
