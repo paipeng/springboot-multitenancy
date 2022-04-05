@@ -46,6 +46,7 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/logout");
         //@formatter:on
+        http.csrf().disable();
     }
 
     /**
