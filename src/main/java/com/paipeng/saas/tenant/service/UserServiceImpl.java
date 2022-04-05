@@ -15,8 +15,8 @@
  */
 package com.paipeng.saas.tenant.service;
 
-import java.util.List;
-
+import com.paipeng.saas.tenant.model.User;
+import com.paipeng.saas.tenant.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,24 +26,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.paipeng.saas.tenant.model.User;
-import com.paipeng.saas.tenant.repository.UserRepository;
+import java.util.List;
 
 /**
  * Implementation of the {@link UserService} which accesses the {@link User}
  * entity. This is the recommended way to access the entities through an
  * interface rather than using the corresponding repository. This allows for
  * separation into repository code and the service layer.
- * 
+ *
  * @author Sunit Katkar, sunitkatkar@gmail.com
- *         (https://sunitkatkar.blogspot.com/)
- * @since ver 1.0 (May 2018)
+ * (https://sunitkatkar.blogspot.com/)
  * @version 1.0
+ * @since ver 1.0 (May 2018)
  */
 @Service
 public class UserServiceImpl implements UserService {
 
-    private static final Logger LOG = LoggerFactory
+    private static final Logger logger = LoggerFactory
             .getLogger(UserServiceImpl.class);
 
     @Autowired
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
         // Encrypt the password
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User justSavedUser = userRepository.save(user);
-        LOG.info("User:" + justSavedUser.getUsername() + " saved.");
+        logger.info("User:" + justSavedUser.getUsername() + " saved.");
         return justSavedUser;
     }
 
@@ -67,7 +66,7 @@ public class UserServiceImpl implements UserService {
                 .getAuthentication().getDetails();
         if (userDetails instanceof UserDetails) {
             String username = ((UserDetails) userDetails).getUsername();
-            LOG.info("Logged in username:" + username);
+            logger.info("Logged in username:" + username);
             return username;
         }
         return null;
@@ -77,14 +76,14 @@ public class UserServiceImpl implements UserService {
     public User findByUsernameAndTenantname(String username, String tenant) {
         User user = userRepository.findByUsernameAndTenantname(username,
                 tenant);
-       if (user == null) {
+        if (user == null) {
             throw new UsernameNotFoundException(
                     String.format(
                             "Username not found for domain, "
                                     + "username=%s, tenant=%s",
                             username, tenant));
         }
-        LOG.info("Found user with username:" + user.getUsername()
+        logger.info("Found user with username:" + user.getUsername()
                 + " from tenant:" + user.getTenant());
         return user;
     }
@@ -92,5 +91,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllUsers() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public User login(User user) {
+        //logger.info("my login: " + user.getEmail());
+        logger.info("my password: " + user.getPassword());
+        return user;
+    }
+
+    @Override
+    public User register(User user) {
+        return user;
+    }
+
+    @Override
+    public void logout() {
+
     }
 }

@@ -44,4 +44,8 @@ public interface UserService {
             @Param("tenant") String tenant);
 
     List<User> findAllUsers();
+
+    User login(User user);
+    User register(User user);
+    void logout();
 }
