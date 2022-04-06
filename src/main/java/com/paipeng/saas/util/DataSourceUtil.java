@@ -39,6 +39,7 @@ public class DataSourceUtil {
 
         // Maximum time that a connection is allowed to sit idle in the pool
         ds.setIdleTimeout(hikariConfigProperties.getIdleTimeout());
+        ds.setAutoCommit(hikariConfigProperties.isAutoCommit());
 
         // Setting up a pool name for each tenant datasource
         String tenantId = masterTenant.getTenantId();

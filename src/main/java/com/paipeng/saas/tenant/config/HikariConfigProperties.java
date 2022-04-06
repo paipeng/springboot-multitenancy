@@ -19,6 +19,7 @@ public class HikariConfigProperties {
     private String ddlAuto;
     private String dialect;
     private boolean allowUpdateOutsideTransaction;
+    private boolean autoCommit;
 
     public int getConnectionTimeout() {
         return connectionTimeout;
@@ -122,5 +123,13 @@ public class HikariConfigProperties {
 
     public void setAllowUpdateOutsideTransaction(boolean allowUpdateOutsideTransaction) {
         this.allowUpdateOutsideTransaction = allowUpdateOutsideTransaction;
+    }
+
+    public boolean isAutoCommit() {
+        return autoCommit;
+    }
+
+    public void setAutoCommit(boolean autoCommit) {
+        this.autoCommit = autoCommit;
     }
 }

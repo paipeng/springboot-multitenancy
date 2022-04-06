@@ -1,6 +1,6 @@
 logging:
   level:
-    root: DEBUG
+    root: TRACE
     org.apache.tomcat: INFO
     org.apache.tomcat.util.net: WARN
     org:
@@ -8,7 +8,7 @@ logging:
         type:
           descriptor:
             sql:
-              BasicBinder: DEBUG
+              BasicBinder: TRACE
 security:
   jwt:
     secret: 5161127a80ff47a1855176c345a1de39833b486ea3dd40629081ab0370a1632c87496492fb634c60a458182c69a7f0d0
@@ -32,7 +32,8 @@ spring:
       format_sql: true
       ddl-auto: update
       dialect: org.hibernate.dialect.MySQL8Dialect
-      allow_update_outside_transaction: true
+      allow_update_outside_transaction: false
+      auto-commit: true
       data-source-properties:
         cachePrepStmts: true
         prepStmtCacheSize: 250
