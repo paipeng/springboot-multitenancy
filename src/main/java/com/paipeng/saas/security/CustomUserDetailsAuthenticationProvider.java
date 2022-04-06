@@ -46,13 +46,13 @@ public class CustomUserDetailsAuthenticationProvider extends AbstractUserDetails
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
     }
-/*
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         logger.info("authenticate paipeng");
         return super.authenticate(authentication);
     }
-*/
+
     /*
      * (non-Javadoc)
      *
@@ -104,6 +104,7 @@ public class CustomUserDetailsAuthenticationProvider extends AbstractUserDetails
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication)
             throws AuthenticationException {
         logger.info("retrieveUser");
+        /*
         CustomAuthenticationToken auth = (CustomAuthenticationToken) authentication;
         UserDetails loadedUser;
 
@@ -127,6 +128,8 @@ public class CustomUserDetailsAuthenticationProvider extends AbstractUserDetails
                     "UserDetailsService returned null, "
                             + "which is an interface contract violation");
         }
-        return loadedUser;
+
+         */
+        return null;
     }
 }
