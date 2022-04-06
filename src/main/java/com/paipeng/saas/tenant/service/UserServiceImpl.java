@@ -15,18 +15,28 @@
  */
 package com.paipeng.saas.tenant.service;
 
+import com.paipeng.saas.config.ApplicationConfig;
+import com.paipeng.saas.security.AppAuthenticationToken;
 import com.paipeng.saas.tenant.model.User;
 import com.paipeng.saas.tenant.repository.UserRepository;
+import com.paipeng.saas.util.CommonUtil;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of the {@link UserService} which accesses the {@link User}
@@ -47,6 +57,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ApplicationConfig applicationConfig;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -74,6 +87,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsernameAndTenantname(String username, String tenant) {
+        logger.info("findByUsernameAndTenantname: " + username + "tenant: " + tenant);
         User user = userRepository.findByUsernameAndTenantname(username,
                 tenant);
         if (user == null) {
@@ -94,10 +108,50 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(User user) {
-        //logger.info("my login: " + user.getEmail());
-        logger.info("my password: " + user.getPassword());
-        return user;
+    public User login(User user) throws Exception {
+        logger.info("login: " + user.getUsername());
+        logger.info("password: " + user.getPassword());
+        logger.info("tenant: " + user.getTenant());
+
+        if (user.getPassword() != null) {
+            //BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            //String encodedPassword = passwordEncoder.encode(user.getPassword());
+            //logger.trace("encodedPassword: " + encodedPassword);
+            User foundUser = userRepository.findByUsernameAndTenantname(user.getUsername(), user.getTenant());
+            logger.info("user found: " + foundUser.getId());
+            if (foundUser != null) {
+                if (CommonUtil.validatePassword(user.getPassword(), foundUser.getPassword())) {
+                    String token = CommonUtil.generateJWTToken(applicationConfig.getSecurityJwtSecret(), foundUser);
+                    logger.info("token: " + token);
+                    foundUser.setToken(token);
+                    logger.info("update user");
+                    foundUser = userRepository.saveAndFlush(foundUser);
+                    return foundUser;
+                } else {
+                    throw new Exception("401");
+                }
+            } else {
+                throw new Exception("401");
+            }
+        }
+        throw new Exception("401");
+    }
+
+    @Override
+    public void logout() {
+        AppAuthenticationToken auth = (AppAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            for (GrantedAuthority grantedAuthority : auth.getAuthorities()) {
+                logger.info("auth: " + grantedAuthority.getAuthority());
+                logger.info("auth: " + grantedAuthority);
+            }
+            User user = (User) auth.getDetails();
+            if (user != null) {
+                logger.info("loginUser: " + user.getUsername());
+                user.setToken(null);
+                userRepository.saveAndFlush(user);
+            }
+        }
     }
 
     @Override
@@ -105,8 +159,4 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    @Override
-    public void logout() {
-
-    }
 }

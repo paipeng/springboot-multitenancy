@@ -45,7 +45,7 @@ public interface UserService {
 
     List<User> findAllUsers();
 
-    User login(User user);
+    User login(User user) throws Exception;
     User register(User user);
     void logout();
 }
