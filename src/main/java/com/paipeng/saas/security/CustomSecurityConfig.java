@@ -41,9 +41,10 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**").authenticated()
                 .antMatchers("/users/login").permitAll()
                 .antMatchers("/version").authenticated()
+                .antMatchers("/login").permitAll()
                 .and()
-                .formLogin().loginPage("/login")
-                .and()
+                //.formLogin().loginPage("/login")
+                //.and()
                 .logout()
                 .logoutUrl("/logout");
         //@formatter:on
