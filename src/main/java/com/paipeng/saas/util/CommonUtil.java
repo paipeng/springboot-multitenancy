@@ -69,7 +69,7 @@ public class CommonUtil {
         }
     }
 
-    public static String generateJWTToken(String jwtSecret, String username) {
+    public static String generateJWTToken(String jwtSecret, String username, String tenant) {
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
         return Jwts
