@@ -1,6 +1,8 @@
 package com.paipeng.saas.controller;
 import com.paipeng.saas.config.VersionConfig;
+import com.paipeng.saas.security.AppAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,6 +39,7 @@ public class VersionController {
         versionMap.put("createData", versionConfig.getCreateData());
         versionMap.put("currentDir", System.getenv("PROJ_HOME"));
 
+        versionMap.put("currentUser", ((AppAuthenticationToken)SecurityContextHolder.getContext().getAuthentication()).toString());
         return versionMap;
     }
 
