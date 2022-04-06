@@ -18,6 +18,7 @@ public class HikariConfigProperties {
     private boolean formatSql;
     private String ddlAuto;
     private String dialect;
+    private boolean allowUpdateOutsideTransaction;
 
     public int getConnectionTimeout() {
         return connectionTimeout;
@@ -113,5 +114,13 @@ public class HikariConfigProperties {
 
     public void setDialect(String dialect) {
         this.dialect = dialect;
+    }
+
+    public boolean isAllowUpdateOutsideTransaction() {
+        return allowUpdateOutsideTransaction;
+    }
+
+    public void setAllowUpdateOutsideTransaction(boolean allowUpdateOutsideTransaction) {
+        this.allowUpdateOutsideTransaction = allowUpdateOutsideTransaction;
     }
 }

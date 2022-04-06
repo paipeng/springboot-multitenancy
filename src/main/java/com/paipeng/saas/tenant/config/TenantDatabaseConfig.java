@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.MultiTenancyStrategy;
+import org.hibernate.cfg.Environment;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.slf4j.Logger;
@@ -143,6 +144,7 @@ public class TenantDatabaseConfig {
         properties.put(org.hibernate.cfg.Environment.SHOW_SQL, hikariConfigProperties.isShowSql());
         properties.put(org.hibernate.cfg.Environment.FORMAT_SQL, hikariConfigProperties.isFormatSql());
         properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, hikariConfigProperties.getDdlAuto());
+        properties.put(Environment.ALLOW_UPDATE_OUTSIDE_TRANSACTION, hikariConfigProperties.isAllowUpdateOutsideTransaction());
 
         emfBean.setJpaPropertyMap(properties);
         LOG.info("tenantEntityManagerFactory set up successfully!");
