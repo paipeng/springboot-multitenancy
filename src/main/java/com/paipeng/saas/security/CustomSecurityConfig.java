@@ -39,6 +39,7 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/css/**", "/index").permitAll()
                 .antMatchers("/user/**").authenticated()
+                .antMatchers("/products/**").authenticated()
                 .antMatchers("/users/login").permitAll()
                 .antMatchers("/version").authenticated()
                 .antMatchers("/login").permitAll()
