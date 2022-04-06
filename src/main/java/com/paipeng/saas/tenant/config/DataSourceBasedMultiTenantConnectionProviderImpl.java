@@ -121,6 +121,7 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
      * @return tenantIdentifier
      */
     private String initializeTenantIfLost(String tenantIdentifier) {
+        logger.info("initializeTenantIfLost: " + tenantIdentifier);
         if (TenantContextHolder.getTenant() == null) {
 
             SecurityContext securityContext = SecurityContextHolder.getContext();
