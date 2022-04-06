@@ -2,7 +2,6 @@ package com.paipeng.saas.controller;
 import com.paipeng.saas.config.VersionConfig;
 import com.paipeng.saas.security.AppAuthenticationToken;
 import com.paipeng.saas.tenant.config.HikariConfigProperties;
-import com.paipeng.saas.tenant.config.HikariDataSourceProperties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +29,6 @@ public class VersionController {
     @Autowired
     private HikariConfigProperties hikariConfigProperties;
 
-    @Autowired
-    private HikariDataSourceProperties hikariDataSourceProperties;
-
     @GetMapping("/version")
     public Map<String, String> version() {
         //log.trace("version");
@@ -49,7 +45,6 @@ public class VersionController {
 
 
         logger.info(hikariConfigProperties);
-        logger.info(hikariDataSourceProperties);
         return versionMap;
     }
 

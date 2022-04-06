@@ -14,6 +14,10 @@ public class HikariConfigProperties {
     private String poolName;
     private String connectionTestQuery;
     private String driverClassName;
+    private boolean showSql;
+    private boolean formatSql;
+    private String ddlAuto;
+    private String dialect;
 
     public int getConnectionTimeout() {
         return connectionTimeout;
@@ -77,5 +81,37 @@ public class HikariConfigProperties {
 
     public void setDriverClassName(String driverClassName) {
         this.driverClassName = driverClassName;
+    }
+
+    public boolean isShowSql() {
+        return showSql;
+    }
+
+    public void setShowSql(boolean showSql) {
+        this.showSql = showSql;
+    }
+
+    public boolean isFormatSql() {
+        return formatSql;
+    }
+
+    public void setFormatSql(boolean formatSql) {
+        this.formatSql = formatSql;
+    }
+
+    public String getDdlAuto() {
+        return ddlAuto;
+    }
+
+    public void setDdlAuto(String ddlAuto) {
+        this.ddlAuto = ddlAuto;
+    }
+
+    public String getDialect() {
+        return dialect;
+    }
+
+    public void setDialect(String dialect) {
+        this.dialect = dialect;
     }
 }

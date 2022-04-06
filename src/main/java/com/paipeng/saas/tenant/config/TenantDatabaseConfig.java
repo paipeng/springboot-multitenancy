@@ -65,7 +65,7 @@ public class TenantDatabaseConfig {
             .getLogger(TenantDatabaseConfig.class);
 
     @Autowired
-    private HikariDataSourceProperties hikariDataSourceProperties;
+    private HikariConfigProperties hikariConfigProperties;
 
     @Bean(name = "tenantJpaVendorAdapter")
     public JpaVendorAdapter jpaVendorAdapter() {
@@ -139,10 +139,10 @@ public class TenantDatabaseConfig {
         // ImprovedNamingStrategy is deprecated and unsupported in Hibernate 5
         // properties.put("hibernate.ejb.naming_strategy",
         // "org.hibernate.cfg.ImprovedNamingStrategy");
-        properties.put(org.hibernate.cfg.Environment.DIALECT, hikariDataSourceProperties.getDialect());
-        properties.put(org.hibernate.cfg.Environment.SHOW_SQL, hikariDataSourceProperties.isShowSql());
-        properties.put(org.hibernate.cfg.Environment.FORMAT_SQL, hikariDataSourceProperties.isFormatSql());
-        properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, hikariDataSourceProperties.getDdlAuto());
+        properties.put(org.hibernate.cfg.Environment.DIALECT, hikariConfigProperties.getDialect());
+        properties.put(org.hibernate.cfg.Environment.SHOW_SQL, hikariConfigProperties.isShowSql());
+        properties.put(org.hibernate.cfg.Environment.FORMAT_SQL, hikariConfigProperties.isFormatSql());
+        properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, hikariConfigProperties.getDdlAuto());
 
         emfBean.setJpaPropertyMap(properties);
         LOG.info("tenantEntityManagerFactory set up successfully!");

@@ -28,12 +28,12 @@ spring:
       pool-name: ConnPool
       connection-test-query: select 1
       driverClassName: com.mysql.cj.jdbc.Driver
+      show-sql: true
+      format_sql: true
+      ddl-auto: update
+      dialect: org.hibernate.dialect.MySQL8Dialect
 
       data-source-properties:
-        show-sql: true
-        format_sql: true
-        ddl-auto: update
-        dialect: org.hibernate.dialect.MySQL8Dialect
         cachePrepStmts: true
         prepStmtCacheSize: 250
         prepStmtCacheSqlLimit: 2048
