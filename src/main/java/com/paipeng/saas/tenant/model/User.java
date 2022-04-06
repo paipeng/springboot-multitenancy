@@ -151,4 +151,14 @@ public class User implements Serializable {
     public void setToken(String token) {
         this.token = token;
     }
+
+    @Override
+    public String toString() {
+        return "User id: " + getId() + "\n" +
+                "username: " + getUsername() + "\n" +
+                "password: " + getPassword() + "\n" +
+                "activie: " + isActive()+ "\n" +
+                "tenant: " + getTenant()+ "\n" +
+                "token: " + getToken();
+    }
 }
