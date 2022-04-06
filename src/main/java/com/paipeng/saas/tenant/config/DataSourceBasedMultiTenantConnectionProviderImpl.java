@@ -130,7 +130,11 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
                 Object principal = authentication.getPrincipal();
                 customUserDetails = principal instanceof CustomUserDetails ? (CustomUserDetails) principal : null;
             }
-            TenantContextHolder.setTenantId(customUserDetails.getTenant());
+            if (customUserDetails != null) {
+                TenantContextHolder.setTenantId(customUserDetails.getTenant());
+            } else {
+                TenantContextHolder.setTenantId(tenantIdentifier);
+            }
         }
 
         if (tenantIdentifier != TenantContextHolder.getTenant()) {
