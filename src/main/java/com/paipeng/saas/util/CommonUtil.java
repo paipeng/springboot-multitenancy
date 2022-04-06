@@ -76,6 +76,7 @@ public class CommonUtil {
                 .builder()
                 .setId("softtekJWT")
                 .setSubject(username)
+                .setAudience(tenant)
                 .claim("authorities",
                         grantedAuthorities.stream()
                                 .map(GrantedAuthority::getAuthority)
