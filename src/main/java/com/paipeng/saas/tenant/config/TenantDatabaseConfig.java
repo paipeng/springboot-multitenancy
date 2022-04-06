@@ -129,21 +129,16 @@ public class TenantDatabaseConfig {
         emfBean.setJpaVendorAdapter(jpaVendorAdapter());
         emfBean.setPersistenceUnitName("tenantdb-persistence-unit");
         Map<String, Object> properties = new HashMap<>();
-        properties.put(org.hibernate.cfg.Environment.MULTI_TENANT,
-                MultiTenancyStrategy.SCHEMA);
-        properties.put(
-                org.hibernate.cfg.Environment.MULTI_TENANT_CONNECTION_PROVIDER,
-                connectionProvider);
-        properties.put(
-                org.hibernate.cfg.Environment.MULTI_TENANT_IDENTIFIER_RESOLVER,
-                tenantResolver);
+        properties.put(Environment.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
+        properties.put(Environment.MULTI_TENANT_CONNECTION_PROVIDER, connectionProvider);
+        properties.put(Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, tenantResolver);
         // ImprovedNamingStrategy is deprecated and unsupported in Hibernate 5
         // properties.put("hibernate.ejb.naming_strategy",
         // "org.hibernate.cfg.ImprovedNamingStrategy");
-        properties.put(org.hibernate.cfg.Environment.DIALECT, hikariConfigProperties.getDialect());
-        properties.put(org.hibernate.cfg.Environment.SHOW_SQL, hikariConfigProperties.isShowSql());
-        properties.put(org.hibernate.cfg.Environment.FORMAT_SQL, hikariConfigProperties.isFormatSql());
-        properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, hikariConfigProperties.getDdlAuto());
+        properties.put(Environment.DIALECT, hikariConfigProperties.getDialect());
+        properties.put(Environment.SHOW_SQL, hikariConfigProperties.isShowSql());
+        properties.put(Environment.FORMAT_SQL, hikariConfigProperties.isFormatSql());
+        properties.put(Environment.HBM2DDL_AUTO, hikariConfigProperties.getDdlAuto());
         properties.put(Environment.ALLOW_UPDATE_OUTSIDE_TRANSACTION, hikariConfigProperties.isAllowUpdateOutsideTransaction());
 
         emfBean.setJpaPropertyMap(properties);
