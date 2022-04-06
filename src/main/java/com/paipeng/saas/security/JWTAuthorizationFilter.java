@@ -45,14 +45,19 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 logger.info("jwtToken: " + jwtToken);
                 Claims claims = validateToken(jwtToken);
                 if (claims != null && claims.get("authorities") != null) {
-                    setUpSpringAuthentication(claims);
+                    setUpSpringAuthentication(claims, null);
                 } else {
                     logger.error("validateToken failed");
                     SecurityContextHolder.clearContext();
                 }
                 User user = userRepository.findByToken(jwtToken);
                 logger.info("findUser: " + user);
-
+                if (claims != null && claims.get("authorities") != null) {
+                    setUpSpringAuthentication(claims, user);
+                } else {
+                    logger.error("validateToken failed");
+                    SecurityContextHolder.clearContext();
+                }
 
             } else {
                 logger.error("checkJWTToken failed");
@@ -106,7 +111,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
      *
      * @param claims claims
      */
-    private void setUpSpringAuthentication(Claims claims) {
+    private void setUpSpringAuthentication(Claims claims, User user) {
         logger.info("setUpSpringAuthentication");
         @SuppressWarnings("unchecked")
         List<String> authorities = (List<String>) claims.get("authorities");
@@ -116,9 +121,11 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
         auth.setDetails(user);
         */
+
         AppAuthenticationToken authToken = new AppAuthenticationToken(claims.getSubject(), null, claims.getAudience(),
                 authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 
+        authToken.setDetails(user);
         SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 
