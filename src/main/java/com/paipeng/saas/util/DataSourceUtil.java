@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+import java.util.Properties;
+
 public class DataSourceUtil {
     private static final Logger LOG = LoggerFactory
             .getLogger(DataSourceUtil.class);
@@ -41,7 +43,23 @@ public class DataSourceUtil {
         ds.setIdleTimeout(hikariConfigProperties.getIdleTimeout());
         ds.setAutoCommit(hikariConfigProperties.isAutoCommit());
         ds.setReadOnly(false);
+        Properties properties = new Properties();
+        properties.setProperty("dataSource.cachePrepStmts", "true");
+        properties.setProperty("dataSource.prepStmtCacheSize", "250");
+        properties.setProperty("dataSource.prepStmtCacheSqlLimit", "2048");
+        properties.setProperty("dataSource.useServerPrepStmts", "true");
+        properties.setProperty("dataSource.useLocalSessionState", "true");
+        properties.setProperty("dataSource.useLocalTransactionState", "true");
 
+        properties.setProperty("dataSource.rewriteBatchedStatements", "true");
+
+        properties.setProperty("dataSource.cacheResultSetMetadata", "true");
+        properties.setProperty("dataSource.cacheServerConfiguration", "true");
+        properties.setProperty("dataSource.elideSetAutoCommits", "true");
+        properties.setProperty("dataSource.maintainTimeStats", "false");
+
+
+        ds.setDataSourceProperties(properties);
 
         // Setting up a pool name for each tenant datasource
         String tenantId = masterTenant.getTenantId();
