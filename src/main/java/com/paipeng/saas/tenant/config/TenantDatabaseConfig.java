@@ -15,11 +15,9 @@
  */
 package com.paipeng.saas.tenant.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.EntityManagerFactory;
-
+import com.paipeng.saas.tenant.model.User;
+import com.paipeng.saas.tenant.repository.UserRepository;
+import com.paipeng.saas.tenant.service.UserService;
 import org.hibernate.MultiTenancyStrategy;
 import org.hibernate.cfg.Environment;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
@@ -39,26 +37,26 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.paipeng.saas.tenant.model.User;
-import com.paipeng.saas.tenant.repository.UserRepository;
-import com.paipeng.saas.tenant.service.UserService;
+import javax.persistence.EntityManagerFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This is the tenant data sources configuration which sets up the multitenancy.
- * 
+ *
  * @author Sunit Katkar, sunitkatkar@gmail.com
- *         (https://sunitkatkar.blogspot.com/)
- * @since ver 1.0 (May 2018)
+ * (https://sunitkatkar.blogspot.com/)
  * @version 1.0
+ * @since ver 1.0 (May 2018)
  */
 @Configuration
 @EnableTransactionManagement
-@ComponentScan(basePackages = { "com.paipeng.saas.tenant.repository",
-        "com.paipeng.saas.tenant.model" })
+@ComponentScan(basePackages = {"com.paipeng.saas.tenant.repository",
+        "com.paipeng.saas.tenant.model"})
 @EnableJpaRepositories(basePackages = {
         "com.paipeng.saas.tenant.repository",
-        "com.paipeng.saas.tenant.service" },
-        entityManagerFactoryRef = "tenantEntityManagerFactory", 
+        "com.paipeng.saas.tenant.service"},
+        entityManagerFactoryRef = "tenantEntityManagerFactory",
         transactionManagerRef = "tenantTransactionManager")
 public class TenantDatabaseConfig {
 
@@ -83,7 +81,7 @@ public class TenantDatabaseConfig {
 
     /**
      * The multi tenant connection provider
-     * 
+     *
      * @return
      */
     @Bean(name = "datasourceBasedMultitenantConnectionProvider")
@@ -95,7 +93,7 @@ public class TenantDatabaseConfig {
 
     /**
      * The current tenant identifier resolver
-     * 
+     *
      * @return
      */
     @Bean(name = "currentTenantIdentifierResolver")
@@ -107,7 +105,7 @@ public class TenantDatabaseConfig {
      * Creates the entity manager factory bean which is required to access the
      * JPA functionalities provided by the JPA persistence provider, i.e.
      * Hibernate in this case.
-     * 
+     *
      * @param connectionProvider
      * @param tenantResolver
      * @return
@@ -115,17 +113,17 @@ public class TenantDatabaseConfig {
     @Bean(name = "tenantEntityManagerFactory")
     @ConditionalOnBean(name = "datasourceBasedMultitenantConnectionProvider")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-            @Qualifier("datasourceBasedMultitenantConnectionProvider") 
-            MultiTenantConnectionProvider connectionProvider,
-            @Qualifier("currentTenantIdentifierResolver") 
-            CurrentTenantIdentifierResolver tenantResolver) {
+            @Qualifier("datasourceBasedMultitenantConnectionProvider")
+                    MultiTenantConnectionProvider connectionProvider,
+            @Qualifier("currentTenantIdentifierResolver")
+                    CurrentTenantIdentifierResolver tenantResolver) {
 
         LocalContainerEntityManagerFactoryBean emfBean = new LocalContainerEntityManagerFactoryBean();
         //All tenant related entities, repositories and service classes must be scanned
         emfBean.setPackagesToScan(
-                new String[] { User.class.getPackage().getName(),
+                new String[]{User.class.getPackage().getName(),
                         UserRepository.class.getPackage().getName(),
-                        UserService.class.getPackage().getName() });
+                        UserService.class.getPackage().getName()});
         emfBean.setJpaVendorAdapter(jpaVendorAdapter());
         emfBean.setPersistenceUnitName("tenantdb-persistence-unit");
         Map<String, Object> properties = new HashMap<>();
