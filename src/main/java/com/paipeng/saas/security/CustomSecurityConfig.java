@@ -84,6 +84,7 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
      * @return
      */
     public AuthenticationProvider authProvider() {
+        logger.info("authProvider");
         // The custom authentication provider defined for this app
         CustomUserDetailsAuthenticationProvider provider = new CustomUserDetailsAuthenticationProvider(passwordEncoder(), userDetailsService);
         return provider;
