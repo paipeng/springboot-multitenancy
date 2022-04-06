@@ -75,3 +75,8 @@ multitenancy:
         idleTimeout: 300000
         minIdle: 10
         poolName: masterdb-connection-pool
+        show-sql: true
+        generate-ddl: true
+        format_sql: true
+        ddl-auto: update
+        dialect: org.hibernate.dialect.MySQL8Dialect

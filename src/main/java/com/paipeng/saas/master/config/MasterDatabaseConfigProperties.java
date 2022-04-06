@@ -89,6 +89,13 @@ public class MasterDatabaseConfigProperties {
      */
     private String poolName;
 
+    private boolean showSql;
+
+    private boolean formatSql;
+    private String ddlAuto;
+
+    private String dialect;
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -250,4 +257,35 @@ public class MasterDatabaseConfigProperties {
         this.poolName = poolName;
     }
 
+    public boolean isShowSql() {
+        return showSql;
+    }
+
+    public void setShowSql(boolean showSql) {
+        this.showSql = showSql;
+    }
+
+    public boolean isFormatSql() {
+        return formatSql;
+    }
+
+    public void setFormatSql(boolean formatSql) {
+        this.formatSql = formatSql;
+    }
+
+    public String getDdlAuto() {
+        return ddlAuto;
+    }
+
+    public void setDdlAuto(String ddlAuto) {
+        this.ddlAuto = ddlAuto;
+    }
+
+    public String getDialect() {
+        return dialect;
+    }
+
+    public void setDialect(String dialect) {
+        this.dialect = dialect;
+    }
 }
