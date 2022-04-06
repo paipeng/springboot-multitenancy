@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("spring.datasource.hikari")
 public class HikariConfigProperties {
     private int connectionTimeout;
-    private int idleTimeout;
+    private long idleTimeout;
     private int maxLifetime;
     private int maximumPoolSize;
     private int minimumIdle;
@@ -23,11 +23,11 @@ public class HikariConfigProperties {
         this.connectionTimeout = connectionTimeout;
     }
 
-    public int getIdleTimeout() {
+    public long getIdleTimeout() {
         return idleTimeout;
     }
 
-    public void setIdleTimeout(int idleTimeout) {
+    public void setIdleTimeout(long idleTimeout) {
         this.idleTimeout = idleTimeout;
     }
 

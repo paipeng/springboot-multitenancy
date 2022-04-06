@@ -3,6 +3,7 @@ package com.paipeng.saas.util;
 import javax.sql.DataSource;
 
 import com.paipeng.saas.master.model.MasterTenant;
+import com.paipeng.saas.tenant.config.HikariConfigProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,28 +19,26 @@ public class DataSourceUtil {
      * @param masterTenant
      * @return
      */
-    public static DataSource createAndConfigureDataSource(
-            MasterTenant masterTenant) {
+    public static DataSource createAndConfigureDataSource(MasterTenant masterTenant, HikariConfigProperties hikariConfigProperties) {
         HikariDataSource ds = new HikariDataSource();
         ds.setUsername(masterTenant.getUsername());
         ds.setPassword(masterTenant.getPassword());
         ds.setJdbcUrl(masterTenant.getUrl());
-        ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        ds.setDriverClassName(hikariConfigProperties.getDriverClassName());
 
         // HikariCP settings - could come from the master_tenant table but
         // hardcoded here for brevity
         // Maximum waiting time for a connection from the pool
-        ds.setConnectionTimeout(20000);
+        ds.setConnectionTimeout(hikariConfigProperties.getConnectionTimeout());
 
         // Minimum number of idle connections in the pool
-        ds.setMinimumIdle(10);
+        ds.setMinimumIdle(hikariConfigProperties.getMinimumIdle());
 
         // Maximum number of actual connection in the pool
-        ds.setMaximumPoolSize(20);
+        ds.setMaximumPoolSize(hikariConfigProperties.getMaximumPoolSize());
 
         // Maximum time that a connection is allowed to sit idle in the pool
-        ds.setIdleTimeout(300000);
-        ds.setConnectionTimeout(20000);
+        ds.setIdleTimeout(hikariConfigProperties.getIdleTimeout());
 
         // Setting up a pool name for each tenant datasource
         String tenantId = masterTenant.getTenantId();

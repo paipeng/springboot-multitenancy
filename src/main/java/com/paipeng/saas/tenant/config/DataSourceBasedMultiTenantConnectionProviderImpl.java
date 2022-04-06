@@ -60,6 +60,8 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
     @Autowired
     private MasterTenantRepository masterTenantRepo;
 
+    @Autowired
+    private HikariConfigProperties hikariConfigProperties;
     /**
      * Map to store the tenant ids as key and the data source as the value
      */
@@ -76,7 +78,7 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
             logger.info(">>>> selectAnyDataSource() -- Total tenants:" + masterTenants.size());
             for (MasterTenant masterTenant : masterTenants) {
                 dataSourcesMtApp.put(masterTenant.getTenantId(),
-                        DataSourceUtil.createAndConfigureDataSource(masterTenant));
+                        DataSourceUtil.createAndConfigureDataSource(masterTenant, hikariConfigProperties));
             }
         }
         return this.dataSourcesMtApp.values().iterator().next();
@@ -98,7 +100,7 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
 					continue;
 				}
                 dataSourcesMtApp.put(masterTenant.getTenantId(),
-                        DataSourceUtil.createAndConfigureDataSource(masterTenant));
+                        DataSourceUtil.createAndConfigureDataSource(masterTenant, hikariConfigProperties));
             }
         }
             //check again if tenant exist in map after rescan master_db, if not, throw UsernameNotFoundException
