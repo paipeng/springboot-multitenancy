@@ -32,6 +32,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -65,6 +67,7 @@ public class User implements Serializable {
     @NotNull(message = "*Please provide your username")
     private String username;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password")
     @Length(min = 5, message = "*Your password must have at least 5 characters")
     @NotNull(message = "*Please provide your password")
@@ -87,6 +90,7 @@ public class User implements Serializable {
      * Many-to-Many relation between a User and Role. A user can have many roles
      * and vice versa
      */
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;

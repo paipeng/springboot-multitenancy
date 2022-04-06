@@ -16,6 +16,8 @@
 
 package com.paipeng.saas.tenant.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -62,6 +64,7 @@ public class Role implements Serializable {
      * Defining the Many-to-Many relation of users and roles. A Role can belong
      * to many Users and many Users can belong to a Role.
      */
+    @JsonBackReference("role-user")
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users;
 
