@@ -33,6 +33,10 @@ spring:
       driverClassName: com.mysql.cj.jdbc.Driver
 
       data-source-properties:
+        show-sql: true
+        format_sql: true
+        ddl-auto: update
+        dialect: org.hibernate.dialect.MySQL8Dialect
         cachePrepStmts: true
         prepStmtCacheSize: 250
         prepStmtCacheSqlLimit: 2048
@@ -49,6 +53,7 @@ spring:
     generate-ddl: false
     hibernate:
       ddl-auto: update
+      format_sql: true
     properties:
       hibernate:
         format_sql: true

@@ -16,6 +16,10 @@ public class HikariDataSourceProperties {
     private boolean cacheServerConfiguration;
     private boolean elideSetAutoCommits;
     private boolean maintainTimeStats;
+    private boolean showSql;
+    private boolean formatSql;
+    private String ddlAuto;
+    private String dialect;
 
     public boolean isCachePrepStmts() {
         return cachePrepStmts;
@@ -95,5 +99,37 @@ public class HikariDataSourceProperties {
 
     public void setMaintainTimeStats(boolean maintainTimeStats) {
         this.maintainTimeStats = maintainTimeStats;
+    }
+
+    public boolean isShowSql() {
+        return showSql;
+    }
+
+    public void setShowSql(boolean showSql) {
+        this.showSql = showSql;
+    }
+
+    public boolean isFormatSql() {
+        return formatSql;
+    }
+
+    public void setFormatSql(boolean formatSql) {
+        this.formatSql = formatSql;
+    }
+
+    public String getDdlAuto() {
+        return ddlAuto;
+    }
+
+    public void setDdlAuto(String ddlAuto) {
+        this.ddlAuto = ddlAuto;
+    }
+
+    public String getDialect() {
+        return dialect;
+    }
+
+    public void setDialect(String dialect) {
+        this.dialect = dialect;
     }
 }

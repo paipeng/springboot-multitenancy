@@ -25,6 +25,7 @@ import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
@@ -63,6 +64,8 @@ public class TenantDatabaseConfig {
     private static final Logger LOG = LoggerFactory
             .getLogger(TenantDatabaseConfig.class);
 
+    @Autowired
+    private HikariDataSourceProperties hikariDataSourceProperties;
 
     @Bean(name = "tenantJpaVendorAdapter")
     public JpaVendorAdapter jpaVendorAdapter() {
@@ -136,11 +139,10 @@ public class TenantDatabaseConfig {
         // ImprovedNamingStrategy is deprecated and unsupported in Hibernate 5
         // properties.put("hibernate.ejb.naming_strategy",
         // "org.hibernate.cfg.ImprovedNamingStrategy");
-        properties.put(org.hibernate.cfg.Environment.DIALECT,
-                "org.hibernate.dialect.MySQL8Dialect");
-        properties.put(org.hibernate.cfg.Environment.SHOW_SQL, true);
-        properties.put(org.hibernate.cfg.Environment.FORMAT_SQL, true);
-        properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, "update");
+        properties.put(org.hibernate.cfg.Environment.DIALECT, hikariDataSourceProperties.getDialect());
+        properties.put(org.hibernate.cfg.Environment.SHOW_SQL, hikariDataSourceProperties.isShowSql());
+        properties.put(org.hibernate.cfg.Environment.FORMAT_SQL, hikariDataSourceProperties.isFormatSql());
+        properties.put(org.hibernate.cfg.Environment.HBM2DDL_AUTO, hikariDataSourceProperties.getDdlAuto());
 
         emfBean.setJpaPropertyMap(properties);
         LOG.info("tenantEntityManagerFactory set up successfully!");
