@@ -104,14 +104,14 @@ public class CustomUserDetailsAuthenticationProvider extends AbstractUserDetails
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication)
             throws AuthenticationException {
         logger.info("retrieveUser");
-        /*
-        CustomAuthenticationToken auth = (CustomAuthenticationToken) authentication;
-        UserDetails loadedUser;
+
+        //CustomAuthenticationToken auth = (CustomAuthenticationToken) authentication;
+        UserDetails loadedUser = null;
 
         try {
-            loadedUser = this.userDetailsService
-                    .loadUserByUsernameAndTenantname(auth.getPrincipal().toString(),
-                            auth.getTenant());
+            //loadedUser = this.userDetailsService
+            //        .loadUserByUsernameAndTenantname(auth.getPrincipal().toString(),
+            //                auth.getTenant());
         } catch (UsernameNotFoundException notFound) {
             if (authentication.getCredentials() != null) {
                 String presentedPassword = authentication.getCredentials().toString();
@@ -129,7 +129,6 @@ public class CustomUserDetailsAuthenticationProvider extends AbstractUserDetails
                             + "which is an interface contract violation");
         }
 
-         */
-        return null;
+        return loadedUser;
     }
 }
