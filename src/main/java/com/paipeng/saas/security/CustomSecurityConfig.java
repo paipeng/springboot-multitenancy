@@ -34,9 +34,8 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         //@formatter:off
-        http
-                .addFilterBefore(authenticationFilter(),
-                        UsernamePasswordAuthenticationFilter.class)
+        http.csrf().disable().cors().and()
+                .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/css/**", "/index").permitAll()
                 .antMatchers("/user/**").authenticated()
@@ -49,7 +48,6 @@ public class CustomSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutUrl("/logout");
         //@formatter:on
-        http.csrf().disable();
     }
 
     /**
