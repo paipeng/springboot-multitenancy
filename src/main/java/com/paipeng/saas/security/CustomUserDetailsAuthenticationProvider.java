@@ -1,9 +1,12 @@
 package com.paipeng.saas.security;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 
 public class CustomUserDetailsAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
+    private final static Logger logger = LogManager.getLogger(CustomUserDetailsAuthenticationProvider.class.getSimpleName());
 
     /**
      * The plaintext password used to perform PasswordEncoder#matches(CharSequence,
@@ -38,10 +42,17 @@ public class CustomUserDetailsAuthenticationProvider extends AbstractUserDetails
 
     public CustomUserDetailsAuthenticationProvider(PasswordEncoder passwordEncoder,
                                                    CustomUserDetailsService userDetailsService) {
+        logger.info("CustomUserDetailsAuthenticationProvider");
         this.passwordEncoder = passwordEncoder;
         this.userDetailsService = userDetailsService;
     }
-
+/*
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        logger.info("authenticate paipeng");
+        return super.authenticate(authentication);
+    }
+*/
     /*
      * (non-Javadoc)
      *
@@ -54,7 +65,7 @@ public class CustomUserDetailsAuthenticationProvider extends AbstractUserDetails
     @Override
     protected void additionalAuthenticationChecks(UserDetails userDetails,
                                                   UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-
+        logger.info("additionalAuthenticationChecks");
         if (authentication.getCredentials() == null) {
             logger.debug("Authentication failed: no credentials provided");
             throw new BadCredentialsException(
@@ -76,6 +87,7 @@ public class CustomUserDetailsAuthenticationProvider extends AbstractUserDetails
 
     @Override
     protected void doAfterPropertiesSet() throws Exception {
+        logger.info("additionalAuthenticationChecks");
         Assert.notNull(this.userDetailsService, "A UserDetailsService must be set");
         this.userNotFoundEncodedPassword = this.passwordEncoder.encode(USER_NOT_FOUND_PASSWORD);
     }
@@ -91,6 +103,7 @@ public class CustomUserDetailsAuthenticationProvider extends AbstractUserDetails
     @Override
     protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication)
             throws AuthenticationException {
+        logger.info("retrieveUser");
         CustomAuthenticationToken auth = (CustomAuthenticationToken) authentication;
         UserDetails loadedUser;
 
