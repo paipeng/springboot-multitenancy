@@ -3,6 +3,7 @@ package com.paipeng.saas.security;
 import com.paipeng.saas.config.ApplicationConfig;
 import com.paipeng.saas.tenant.model.User;
 import com.paipeng.saas.tenant.repository.UserRepository;
+import com.paipeng.saas.util.CommonUtil;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 logger.info("jwt token found");
                 String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
                 logger.info("jwtToken: " + jwtToken);
-                Claims claims = validateToken(jwtToken);
+                Claims claims = CommonUtil.validateToken(applicationConfig.getSecurityJwtSecret(), jwtToken);
                 if (claims != null && claims.get("authorities") != null) {
                     setUpSpringAuthentication(claims, null);
                 } else {
@@ -97,11 +98,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
             }
         }
-    }
-
-    private Claims validateToken(String jwtToken) {
-        logger.info("validateToken");
-        return Jwts.parser().setSigningKey(applicationConfig.getSecurityJwtSecret()).parseClaimsJws(jwtToken).getBody();
     }
 
     /**

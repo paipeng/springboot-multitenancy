@@ -1,6 +1,7 @@
 package com.paipeng.saas.util;
 
 import com.paipeng.saas.tenant.model.User;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
@@ -95,5 +96,10 @@ public class CommonUtil {
         log.info("password1: " + passwordEncoder.encode(password1));
         log.info("password2: " + passwordEncoder.encode(password2));
         return passwordEncoder.matches(password1, password2);
+    }
+
+    public static Claims validateToken(String jwtSecret, String jwtToken) {
+        //logger.info("validateToken");
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwtToken).getBody();
     }
 }
