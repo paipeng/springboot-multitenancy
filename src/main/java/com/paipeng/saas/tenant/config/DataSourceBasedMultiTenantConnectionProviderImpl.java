@@ -18,6 +18,7 @@ package com.paipeng.saas.tenant.config;
 import com.paipeng.saas.master.model.MasterTenant;
 import com.paipeng.saas.master.repository.MasterTenantRepository;
 import com.paipeng.saas.tenant.model.CustomUserDetails;
+import com.paipeng.saas.util.AvailableTenantsInformationHolder;
 import com.paipeng.saas.util.DataSourceUtil;
 import com.paipeng.saas.util.TenantContextHolder;
 import org.hibernate.engine.jdbc.connections.spi.AbstractDataSourceBasedMultiTenantConnectionProviderImpl;
@@ -62,7 +63,6 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
     /**
      * Map to store the tenant ids as key and the data source as the value
      */
-    private Map<String, DataSource> dataSourcesMtApp = new TreeMap<>();
 
     @Override
     protected DataSource selectAnyDataSource() {
@@ -70,16 +70,19 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
         // This method is called more than once. So check if the data source map
         // is empty. If it is then rescan master_tenant table for all tenant
         // entries.
-        if (dataSourcesMtApp.isEmpty()) {
+        if (AvailableTenantsInformationHolder.getAvailableTenants().isEmpty()) {
             List<MasterTenant> masterTenants = masterTenantRepo.findAllByOrderByIdDesc();
             logger.info(">>>> selectAnyDataSource() -- Total tenants:" + masterTenants.size());
             for (MasterTenant masterTenant : masterTenants) {
                 logger.info(">> " + masterTenant.getTenantId());
-                dataSourcesMtApp.put(masterTenant.getTenantId(),
+
+                AvailableTenantsInformationHolder.put(masterTenant.getTenantId(),
                         DataSourceUtil.createAndConfigureDataSource(masterTenant, hikariConfigProperties));
             }
         }
-        return this.dataSourcesMtApp.values().iterator().next();
+
+
+        return AvailableTenantsInformationHolder.getFirstDataSource();
     }
 
     @Override
@@ -89,20 +92,20 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
         logger.info("selectDataSource: " + tenantIdentifier);
         tenantIdentifier = initializeTenantIfLost(tenantIdentifier);
 
-        if (!this.dataSourcesMtApp.containsKey(tenantIdentifier)) {
+        if (!AvailableTenantsInformationHolder.getAvailableTenants().containsKey(tenantIdentifier)) {
             List<MasterTenant> masterTenants = masterTenantRepo.findAll();
             logger.info(
                     ">>>> selectDataSource() -- tenant:" + tenantIdentifier + " Total tenants:" + masterTenants.size());
             for (MasterTenant masterTenant : masterTenants) {
-                if (this.dataSourcesMtApp.containsKey(masterTenant.getTenantId())) {
+                if (AvailableTenantsInformationHolder.getAvailableTenants().containsKey(masterTenant.getTenantId())) {
                     continue;
                 }
-                dataSourcesMtApp.put(masterTenant.getTenantId(),
+                AvailableTenantsInformationHolder.put(masterTenant.getTenantId(),
                         DataSourceUtil.createAndConfigureDataSource(masterTenant, hikariConfigProperties));
             }
         }
         //check again if tenant exist in map after rescan master_db, if not, throw UsernameNotFoundException
-        if (!this.dataSourcesMtApp.containsKey(tenantIdentifier)) {
+        if (!AvailableTenantsInformationHolder.getAvailableTenants().containsKey(tenantIdentifier)) {
             logger.warn("Trying to get tenant:" + tenantIdentifier + " which was not found in master db after rescan");
             throw new UsernameNotFoundException(
                     String.format(
@@ -110,7 +113,7 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
                                     + " tenant=%s",
                             tenantIdentifier));
         }
-        return this.dataSourcesMtApp.get(tenantIdentifier);
+        return AvailableTenantsInformationHolder.getAvailableTenants().get(tenantIdentifier);
     }
 
     /**

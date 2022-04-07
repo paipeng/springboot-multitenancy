@@ -2,13 +2,19 @@ package com.paipeng.saas.controller;
 import com.paipeng.saas.config.VersionConfig;
 import com.paipeng.saas.security.AppAuthenticationToken;
 import com.paipeng.saas.tenant.config.HikariConfigProperties;
+import com.paipeng.saas.tenant.service.UserService;
+import com.paipeng.saas.util.AvailableTenantsInformationHolder;
+import com.paipeng.saas.util.TenantContextHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,6 +35,9 @@ public class VersionController {
     @Autowired
     private HikariConfigProperties hikariConfigProperties;
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/version")
     public Map<String, String> version() {
         //log.trace("version");
@@ -46,6 +55,16 @@ public class VersionController {
 
         logger.info(hikariConfigProperties);
         return versionMap;
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void doSomethingAfterStartup() {
+        logger.info("doSomethingAfterStartup");
+        for (String key : AvailableTenantsInformationHolder.getAvailableTenants().keySet()) {
+            logger.info(key + ":" + key + " datasource: " + AvailableTenantsInformationHolder.getAvailableTenants().get(key));
+            TenantContextHolder.setTenantId(key);
+            userService.findAllUsers();
+        }
     }
 
     private String stampToDate(long s) {
