@@ -15,12 +15,11 @@
  */
 package com.paipeng.saas.tenant.config;
 
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import javax.sql.DataSource;
-
+import com.paipeng.saas.master.model.MasterTenant;
+import com.paipeng.saas.master.repository.MasterTenantRepository;
+import com.paipeng.saas.tenant.model.CustomUserDetails;
+import com.paipeng.saas.util.DataSourceUtil;
+import com.paipeng.saas.util.TenantContextHolder;
 import org.hibernate.engine.jdbc.connections.spi.AbstractDataSourceBasedMultiTenantConnectionProviderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,20 +30,18 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.paipeng.saas.master.model.MasterTenant;
-import com.paipeng.saas.master.repository.MasterTenantRepository;
-import com.paipeng.saas.tenant.model.CustomUserDetails;
-import com.paipeng.saas.util.DataSourceUtil;
-import com.paipeng.saas.util.TenantContextHolder;
+import javax.sql.DataSource;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * This class does the job of selecting the correct database based on the tenant id found by the
  * {@link CurrentTenantIdentifierResolverImpl}
- * 
- * @author Sunit Katkar, sunitkatkar@gmail.com (https://sunitkatkar.blogspot.com/)
- * @since ver 1.0 (May 2018)
- * @version 1.0
  *
+ * @author Sunit Katkar, sunitkatkar@gmail.com (https://sunitkatkar.blogspot.com/)
+ * @version 1.0
+ * @since ver 1.0 (May 2018)
  */
 @Configuration
 public class DataSourceBasedMultiTenantConnectionProviderImpl
@@ -96,21 +93,21 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
             logger.info(
                     ">>>> selectDataSource() -- tenant:" + tenantIdentifier + " Total tenants:" + masterTenants.size());
             for (MasterTenant masterTenant : masterTenants) {
-				if (this.dataSourcesMtApp.containsKey(masterTenant.getTenantId())) {
-					continue;
-				}
+                if (this.dataSourcesMtApp.containsKey(masterTenant.getTenantId())) {
+                    continue;
+                }
                 dataSourcesMtApp.put(masterTenant.getTenantId(),
                         DataSourceUtil.createAndConfigureDataSource(masterTenant, hikariConfigProperties));
             }
         }
-            //check again if tenant exist in map after rescan master_db, if not, throw UsernameNotFoundException
-                    if (!this.dataSourcesMtApp.containsKey(tenantIdentifier)) {
-                        logger.warn("Trying to get tenant:" + tenantIdentifier + " which was not found in master db after rescan");
+        //check again if tenant exist in map after rescan master_db, if not, throw UsernameNotFoundException
+        if (!this.dataSourcesMtApp.containsKey(tenantIdentifier)) {
+            logger.warn("Trying to get tenant:" + tenantIdentifier + " which was not found in master db after rescan");
             throw new UsernameNotFoundException(
                     String.format(
                             "Tenant not found after rescan, "
                                     + " tenant=%s",
-                             tenantIdentifier));
+                            tenantIdentifier));
         }
         return this.dataSourcesMtApp.get(tenantIdentifier);
     }
@@ -118,7 +115,7 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
     /**
      * Initialize tenantId based on the logged in user if the tenant Id got lost in after form submission in a user
      * session.
-     * 
+     *
      * @param tenantIdentifier
      * @return tenantIdentifier
      */
