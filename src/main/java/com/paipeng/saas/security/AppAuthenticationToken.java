@@ -1,12 +1,16 @@
 package com.paipeng.saas.security;
 
+import com.paipeng.saas.tenant.model.CustomUserDetails;
 import com.paipeng.saas.tenant.model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AppAuthenticationToken extends AbstractAuthenticationToken {
     private final static Logger logger = LogManager.getLogger(AppAuthenticationToken.class.getSimpleName());
@@ -17,6 +21,7 @@ public class AppAuthenticationToken extends AbstractAuthenticationToken {
      * The tenant i.e. database identifier
      */
     private String tenant;
+    CustomUserDetails customUserDetails;
     /**
      * Creates a token with the supplied array of authorities.
      *
@@ -33,6 +38,15 @@ public class AppAuthenticationToken extends AbstractAuthenticationToken {
 
         logger.info("CustomAuthenticationToken: " + tenant);
         this.tenant = tenant;
+
+        if (authorities == null) {
+            Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+            grantedAuthorities.add(new SimpleGrantedAuthority("USER"));
+            customUserDetails = new CustomUserDetails((String)principal, (String)credentials, grantedAuthorities, tenant);
+        } else {
+            customUserDetails = new CustomUserDetails((String)principal, (String)credentials, authorities, tenant);
+        }
+
         super.setAuthenticated(true); // must use super, as we override
     }
 
@@ -43,7 +57,7 @@ public class AppAuthenticationToken extends AbstractAuthenticationToken {
 
     @Override
     public Object getPrincipal() {
-        return null;
+        return customUserDetails;
     }
 
     @Override
