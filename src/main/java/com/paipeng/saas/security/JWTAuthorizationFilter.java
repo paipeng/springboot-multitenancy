@@ -1,22 +1,32 @@
 package com.paipeng.saas.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.paipeng.saas.config.ApplicationConfig;
 import com.paipeng.saas.tenant.model.User;
 import com.paipeng.saas.tenant.repository.UserRepository;
 import com.paipeng.saas.util.CommonUtil;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,11 +68,31 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.clearContext();
                 }
 
+                chain.doFilter(request, response);
+
             } else {
                 logger.error("checkJWTToken failed");
+                if (request.getMethod().equals("POST") && "/login".equals(request.getRequestURI())) {
+
+                    //ServletRequest requestWrapper = new MultiReadHttpServletRequest(request);
+
+                    RequestWrapper requestWrapper = new RequestWrapper(request);
+                    ObjectMapper mapper = new ObjectMapper();
+                    User user = mapper.readValue(requestWrapper.getInputStream(), User.class);
+                    logger.info("login user: " + user.getUsername());
+                    logger.info("login tenant: " + user.getTenant());
+                    logger.info("login password: " + user.getPassword());
+                    AppAuthenticationToken authToken = new AppAuthenticationToken(user.getUsername(), user.getPassword(), user.getTenant(), null);
+                    authToken.setDetails(user);
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                    chain.doFilter(requestWrapper, response);
+                } else {
+                    chain.doFilter(request, response);
+                }
                 SecurityContextHolder.clearContext();
             }
-            chain.doFilter(request, response);
+
         } catch (ExpiredJwtException e) {
             logger.error("doFilterInternal ExpiredJwtException: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -130,4 +160,47 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         return true;
     }
 
+    public class RequestWrapper extends HttpServletRequestWrapper {
+        private byte[] body;
+        public RequestWrapper(HttpServletRequest request) throws IOException {
+            super(request);
+            this.body = StreamUtils.copyToByteArray(request.getInputStream());
+        }
+
+        @Override
+        public ServletInputStream getInputStream() throws IOException {
+            return new ServletInputStreamWrapper(this.body);
+        }
+    }
+
+    public class ServletInputStreamWrapper extends ServletInputStream {
+        private InputStream inputStream;
+        public ServletInputStreamWrapper(byte[] body) {
+            this.inputStream = new ByteArrayInputStream(body);
+        }
+
+        @Override
+        public boolean isFinished() {
+            try {
+                return inputStream.available() == 0;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        @Override
+        public boolean isReady() {
+            return true;
+        }
+
+        @Override
+        public void setReadListener(ReadListener listener) {
+
+        }
+
+        @Override
+        public int read() throws IOException {
+            return this.inputStream.read();
+        }
+    }
 }
