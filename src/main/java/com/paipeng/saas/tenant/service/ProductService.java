@@ -1,13 +1,14 @@
-package com.paipeng.saas.service;
+package com.paipeng.saas.tenant.service;
 
 import com.paipeng.saas.config.ApplicationConfig;
-import com.paipeng.saas.entity.Product;
-import com.paipeng.saas.entity.User;
-import com.paipeng.saas.repository.ProductRepository;
+import com.paipeng.saas.tenant.model.Product;
+import com.paipeng.saas.tenant.model.User;
+import com.paipeng.saas.tenant.repository.ProductRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class ProductService extends BaseService {
         return productRepository.findAll();
     }
 
+    @Transactional(rollbackFor = Exception.class, transactionManager = "tenantTransactionManager")
     public Product save(Product product) throws Exception {
         User currentUser = getUserFromSecurity();
         if (currentUser == null) {
@@ -38,9 +40,12 @@ public class ProductService extends BaseService {
             throw new Exception("409");
         }
 
+        logger.info("setUser to current User again");
         product.setUser(currentUser);
 
+        logger.info("save product");
         product = productRepository.saveAndFlush(product);
+        logger.info("save done");
         return product;
     }
 

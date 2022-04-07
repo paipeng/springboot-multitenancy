@@ -1,6 +1,6 @@
-package com.paipeng.saas.repository;
+package com.paipeng.saas.tenant.repository;
 
-import com.paipeng.saas.entity.Product;
+import com.paipeng.saas.tenant.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

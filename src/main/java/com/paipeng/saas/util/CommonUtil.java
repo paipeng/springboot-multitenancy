@@ -1,12 +1,21 @@
 package com.paipeng.saas.util;
 
+import com.paipeng.saas.tenant.model.User;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Base64Utils;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommonUtil {
     private static final Logger log = LoggerFactory.getLogger(CommonUtil.class.getSimpleName());
@@ -61,5 +70,30 @@ public class CommonUtil {
         } catch (Exception ex) {
             return null;
         }
+    }
+
+    public static String generateJWTToken(String jwtSecret, User user) {
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+                .commaSeparatedStringToAuthorityList(user.getRoles().iterator().next().getRole());
+        return Jwts
+                .builder()
+                .setId("softtekJWT")
+                .setSubject(user.getUsername())
+                .setAudience(user.getTenant())
+                .claim("authorities",
+                        grantedAuthorities.stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toList()))
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .signWith(SignatureAlgorithm.HS512,
+                        jwtSecret).compact();
+    }
+
+    public static boolean validatePassword(String password1, String password2) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        log.info("password1: " + passwordEncoder.encode(password1));
+        log.info("password2: " + passwordEncoder.encode(password2));
+        return passwordEncoder.matches(password1, password2);
     }
 }

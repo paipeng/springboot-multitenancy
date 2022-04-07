@@ -1,8 +1,9 @@
 package com.paipeng.saas.security;
 
 import com.paipeng.saas.config.ApplicationConfig;
-import com.paipeng.saas.entity.User;
-import com.paipeng.saas.repository.UserRepository;
+import com.paipeng.saas.tenant.model.CustomUserDetails;
+import com.paipeng.saas.tenant.model.User;
+import com.paipeng.saas.tenant.repository.UserRepository;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,19 +40,25 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
         try {
             if (checkJWTToken(request, response)) {
-                //logger.info("jwt token found");
+                logger.info("jwt token found");
                 String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
-                //logger.info("jwtToken: " + jwtToken);
-
+                logger.info("jwtToken: " + jwtToken);
+                Claims claims = validateToken(jwtToken);
+                if (claims != null && claims.get("authorities") != null) {
+                    setUpSpringAuthentication(claims, null);
+                } else {
+                    logger.error("validateToken failed");
+                    SecurityContextHolder.clearContext();
+                }
                 User user = userRepository.findByToken(jwtToken);
-
-                Claims claims = validateToken(jwtToken, user);
+                logger.info("findUser: " + user);
                 if (claims != null && claims.get("authorities") != null) {
                     setUpSpringAuthentication(claims, user);
                 } else {
                     logger.error("validateToken failed");
                     SecurityContextHolder.clearContext();
                 }
+
             } else {
                 logger.error("checkJWTToken failed");
                 SecurityContextHolder.clearContext();
@@ -94,29 +101,32 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         }
     }
 
-    private Claims validateToken(String jwtToken, User user) {
-        //logger.info("validateToken");
-        if (user != null) {
-            //logger.info("local SECRET: " + user.getToken());
-            return Jwts.parser().setSigningKey(applicationConfig.getSecurityJwtSecret()).parseClaimsJws(jwtToken).getBody();
-        }
-        return null;
+    private Claims validateToken(String jwtToken) {
+        logger.info("validateToken");
+        return Jwts.parser().setSigningKey(applicationConfig.getSecurityJwtSecret()).parseClaimsJws(jwtToken).getBody();
     }
 
     /**
      * Authentication method in Spring flow
      *
      * @param claims claims
-     * @param user   user
      */
     private void setUpSpringAuthentication(Claims claims, User user) {
+        logger.info("setUpSpringAuthentication");
         @SuppressWarnings("unchecked")
         List<String> authorities = (List<String>) claims.get("authorities");
 
+        /*
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
                 authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
         auth.setDetails(user);
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        */
+
+        AppAuthenticationToken authToken = new AppAuthenticationToken(claims.getSubject(), null, claims.getAudience(),
+                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+
+        authToken.setDetails(user);
+        SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 
     private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse res) {

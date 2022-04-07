@@ -1,4 +1,4 @@
-package com.paipeng.saas.entity;
+package com.paipeng.saas.tenant.model;
 
 import org.hibernate.annotations.Generated;
 

@@ -1,16 +1,12 @@
-package com.paipeng.saas.entity;
+package com.paipeng.saas.tenant.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name = "products")
+@Table(name = "product")
 public class Product extends BaseEntity {
 
     @Column(nullable = false, length = 256)
@@ -30,11 +26,6 @@ public class Product extends BaseEntity {
     @LazyToOne(value = LazyToOneOption.FALSE)
     private User user;
 
-
-    @JsonBackReference("authorization-product")
-    @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.LAZY, mappedBy = "product")
-    @LazyCollection(value = LazyCollectionOption.EXTRA)
-    private List<Authorization> authorizations;
 
     public String getName() {
         return name;
@@ -76,11 +67,4 @@ public class Product extends BaseEntity {
         this.user = user;
     }
 
-    public List<Authorization> getAuthorizations() {
-        return authorizations;
-    }
-
-    public void setAuthorizations(List<Authorization> authorizations) {
-        this.authorizations = authorizations;
-    }
 }

@@ -1,7 +1,7 @@
 package com.paipeng.saas.controller;
 
-import com.paipeng.saas.entity.Product;
-import com.paipeng.saas.service.ProductService;
+import com.paipeng.saas.tenant.model.Product;
+import com.paipeng.saas.tenant.service.ProductService;
 import com.sun.istack.NotNull;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

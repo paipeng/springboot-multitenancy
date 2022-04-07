@@ -1,7 +1,11 @@
 package com.paipeng.saas.controller;
-
 import com.paipeng.saas.config.VersionConfig;
+import com.paipeng.saas.security.AppAuthenticationToken;
+import com.paipeng.saas.tenant.config.HikariConfigProperties;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,16 +18,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @RestController
 public class VersionController {
-    //private final Logger log;
+    private final static Logger logger = LogManager.getLogger(VersionController.class.getSimpleName());
 
     @Autowired
     private VersionConfig versionConfig;
 
-    public VersionController() {
-        //this.log = LoggerFactory.getLogger(this.getClass().getName());
-    }
+    @Autowired
+    private HikariConfigProperties hikariConfigProperties;
 
     @GetMapping("/version")
     public Map<String, String> version() {
@@ -37,6 +41,10 @@ public class VersionController {
         versionMap.put("createData", versionConfig.getCreateData());
         versionMap.put("currentDir", System.getenv("PROJ_HOME"));
 
+        versionMap.put("currentUser", ((AppAuthenticationToken)SecurityContextHolder.getContext().getAuthentication()).toString());
+
+
+        logger.info(hikariConfigProperties);
         return versionMap;
     }
 
@@ -71,3 +79,4 @@ public class VersionController {
     }
 
 }
+

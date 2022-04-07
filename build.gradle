@@ -1,7 +1,7 @@
 import java.time.LocalDateTime
 
 plugins {
-    id 'org.springframework.boot' version '2.6.1'
+    id 'org.springframework.boot' version '2.6.6'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
 }
@@ -13,7 +13,7 @@ sourceCompatibility = '1.8'
 def applicationName = 'SpringBoot Restful API Demo'
 springBoot {
     buildInfo()
-    mainClass = 'com.paipeng.springboot.Application'
+    mainClass = 'com.paipeng.saas.Application'
 }
 
 repositories {
@@ -39,8 +39,12 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-jooq'
+    implementation 'org.springframework.data:spring-data-r2dbc'
+    // https://mvnrepository.com/artifact/org.liquibase/liquibase-core
+    implementation group: 'org.liquibase', name: 'liquibase-core', version: '4.9.1'
 
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
     implementation 'mysql:mysql-connector-java'
 
     // https://mvnrepository.com/artifact/com.auth0/java-jwt
@@ -52,6 +56,11 @@ dependencies {
 
     // https://mvnrepository.com/artifact/commons-io/commons-io
     implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+    // https://mvnrepository.com/artifact/javax.validation/validation-api
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    // https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator
+    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '7.0.4.Final'
 
 
     testImplementation('org.springframework.boot:spring-boot-starter-test')
