@@ -71,9 +71,10 @@ public class DataSourceBasedMultiTenantConnectionProviderImpl
         // is empty. If it is then rescan master_tenant table for all tenant
         // entries.
         if (dataSourcesMtApp.isEmpty()) {
-            List<MasterTenant> masterTenants = masterTenantRepo.findAll();
+            List<MasterTenant> masterTenants = masterTenantRepo.findAllByOrderByIdDesc();
             logger.info(">>>> selectAnyDataSource() -- Total tenants:" + masterTenants.size());
             for (MasterTenant masterTenant : masterTenants) {
+                logger.info(">> " + masterTenant.getTenantId());
                 dataSourcesMtApp.put(masterTenant.getTenantId(),
                         DataSourceUtil.createAndConfigureDataSource(masterTenant, hikariConfigProperties));
             }

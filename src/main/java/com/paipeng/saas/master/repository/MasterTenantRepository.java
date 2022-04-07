@@ -22,6 +22,8 @@ import org.springframework.stereotype.Repository;
 
 import com.paipeng.saas.master.model.MasterTenant;
 
+import java.util.List;
+
 /**
  * Repository for the {@link MasterTenant} JPA entity. Any custom methods, not
  * already defined in {@link JpaRepository}, are to be defined here
@@ -42,4 +44,7 @@ public interface MasterTenantRepository
      */
     @Query("select p from MasterTenant p where p.tenantId = :tenantId")
     MasterTenant findByTenantId(@Param("tenantId") String tenantId);
+
+    List<MasterTenant> findAllByOrderByIdAsc();
+    List<MasterTenant> findAllByOrderByIdDesc();
 }
