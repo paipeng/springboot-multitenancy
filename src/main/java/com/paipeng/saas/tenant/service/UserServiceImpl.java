@@ -112,8 +112,9 @@ public class UserServiceImpl implements UserService {
             //String encodedPassword = passwordEncoder.encode(user.getPassword());
             //logger.trace("encodedPassword: " + encodedPassword);
             User foundUser = userRepository.findByUsernameAndTenantname(user.getUsername(), user.getTenant());
-            logger.info("user found: " + foundUser.getId());
+
             if (foundUser != null) {
+                logger.info("user found: " + foundUser.getId());
                 if (CommonUtil.validatePassword(user.getPassword(), foundUser.getPassword())) {
                     String token = CommonUtil.generateJWTToken(applicationConfig.getSecurityJwtSecret(), foundUser);
                     logger.info("token: " + token);
