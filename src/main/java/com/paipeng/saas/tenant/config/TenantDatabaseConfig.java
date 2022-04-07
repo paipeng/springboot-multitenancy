@@ -59,9 +59,7 @@ import java.util.Map;
         entityManagerFactoryRef = "tenantEntityManagerFactory",
         transactionManagerRef = "tenantTransactionManager")
 public class TenantDatabaseConfig {
-
-    private static final Logger LOG = LoggerFactory
-            .getLogger(TenantDatabaseConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(TenantDatabaseConfig.class);
 
     @Autowired
     private HikariConfigProperties hikariConfigProperties;
@@ -140,7 +138,7 @@ public class TenantDatabaseConfig {
         properties.put(Environment.ALLOW_UPDATE_OUTSIDE_TRANSACTION, hikariConfigProperties.isAllowUpdateOutsideTransaction());
 
         emfBean.setJpaPropertyMap(properties);
-        LOG.info("tenantEntityManagerFactory set up successfully!");
+        logger.info("tenantEntityManagerFactory set up successfully!");
         return emfBean;
     }
 }
