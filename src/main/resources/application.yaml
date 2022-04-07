@@ -28,6 +28,7 @@ spring:
       pool-name: ConnPool
       connection-test-query: select 1
       driverClassName: com.mysql.cj.jdbc.Driver
+      dataSourceClassName:
       show-sql: true
       format_sql: true
       ddl-auto: update

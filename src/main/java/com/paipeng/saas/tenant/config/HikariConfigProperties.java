@@ -20,6 +20,7 @@ public class HikariConfigProperties {
     private String dialect;
     private boolean allowUpdateOutsideTransaction;
     private boolean autoCommit;
+    private String dataSourceClassName;
 
     public int getConnectionTimeout() {
         return connectionTimeout;
@@ -131,5 +132,13 @@ public class HikariConfigProperties {
 
     public void setAutoCommit(boolean autoCommit) {
         this.autoCommit = autoCommit;
+    }
+
+    public String getDataSourceClassName() {
+        return dataSourceClassName;
+    }
+
+    public void setDataSourceClassName(String dataSourceClassName) {
+        this.dataSourceClassName = dataSourceClassName;
     }
 }

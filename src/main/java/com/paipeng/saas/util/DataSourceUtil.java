@@ -26,6 +26,7 @@ public class DataSourceUtil {
         ds.setUsername(masterTenant.getUsername());
         ds.setPassword(masterTenant.getPassword());
         ds.setJdbcUrl(masterTenant.getUrl());
+        //ds.setDataSourceClassName(hikariConfigProperties.getDataSourceClassName());
         ds.setDriverClassName(hikariConfigProperties.getDriverClassName());
 
         // HikariCP settings - could come from the master_tenant table but
@@ -44,19 +45,20 @@ public class DataSourceUtil {
         ds.setAutoCommit(hikariConfigProperties.isAutoCommit());
         ds.setReadOnly(false);
         Properties properties = new Properties();
-        properties.setProperty("dataSource.cachePrepStmts", "true");
-        properties.setProperty("dataSource.prepStmtCacheSize", "250");
-        properties.setProperty("dataSource.prepStmtCacheSqlLimit", "2048");
-        properties.setProperty("dataSource.useServerPrepStmts", "true");
-        properties.setProperty("dataSource.useLocalSessionState", "true");
-        properties.setProperty("dataSource.useLocalTransactionState", "true");
+        properties.setProperty("cachePrepStmts", "true");
+        properties.setProperty("prepStmtCacheSize", "250");
+        properties.setProperty("prepStmtCacheSqlLimit", "2048");
+        properties.setProperty("useServerPrepStmts", "true");
+        properties.setProperty("useLocalSessionState", "true");
+        properties.setProperty("useLocalTransactionState", "true");
 
-        properties.setProperty("dataSource.rewriteBatchedStatements", "true");
+        properties.setProperty("rewriteBatchedStatements", "true");
 
-        properties.setProperty("dataSource.cacheResultSetMetadata", "true");
-        properties.setProperty("dataSource.cacheServerConfiguration", "true");
-        properties.setProperty("dataSource.elideSetAutoCommits", "true");
-        properties.setProperty("dataSource.maintainTimeStats", "false");
+        properties.setProperty("cacheResultSetMetadata", "true");
+        properties.setProperty("cacheServerConfiguration", "true");
+        properties.setProperty("elideSetAutoCommits", "true");
+        properties.setProperty("maintainTimeStats", "false");
+        properties.setProperty("useUnicode","true");
 
 
         ds.setDataSourceProperties(properties);
