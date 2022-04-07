@@ -146,7 +146,7 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         auth.setDetails(user);
         */
 
-        AppAuthenticationToken authToken = new AppAuthenticationToken(claims.getSubject(), null, claims.getAudience(),
+        AppAuthenticationToken authToken = new AppAuthenticationToken(claims.getSubject(), "", claims.getAudience(),
                 authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 
         authToken.setDetails(user);
