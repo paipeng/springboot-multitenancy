@@ -35,7 +35,7 @@ import com.paipeng.saas.util.TenantContextHolder;
 public class CurrentTenantIdentifierResolverImpl
         implements CurrentTenantIdentifierResolver {
 
-    private static final String DEFAULT_TENANT_ID = "tenant_2";
+    private static final String DEFAULT_TENANT_ID = "tenant_1";
 
     private final static Logger logger = LogManager.getLogger(CurrentTenantIdentifierResolverImpl.class.getSimpleName());
     @Override
