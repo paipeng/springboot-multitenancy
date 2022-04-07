@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CommonUtil {
-    private static final Logger log = LoggerFactory.getLogger(CommonUtil.class.getSimpleName());
+    private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class.getSimpleName());
     public static String getProjHomePath() {
         return System.getenv("PROJ_HOME");
     }
@@ -33,13 +33,13 @@ public class CommonUtil {
 
     public static byte[] getByteArrayByImagePath(String imagePath) {
         if (imagePath == null || imagePath.equals("")) {
-            log.warn("param is null");
+            logger.warn("param is null");
             return null;
         }
 
         File file = new File(imagePath);
         if (file == null || file.exists() == false) {
-            log.warn("file is not find");
+            logger.warn("file is not find");
             return null;
         }
 
@@ -53,13 +53,13 @@ public class CommonUtil {
                 return out.toByteArray();
             }
         } catch (FileNotFoundException e) {
-            log.error("getByteArrayByImagePath FileNotFoundException:" + e.getMessage());
+            logger.error("getByteArrayByImagePath FileNotFoundException:" + e.getMessage());
             return null;
         } catch (IOException e) {
-            log.error("getByteArrayByImagePath IOException:" + e.getMessage());
+            logger.error("getByteArrayByImagePath IOException:" + e.getMessage());
             return null;
         } catch (Exception e) {
-            log.error("getByteArrayByImagePath Exception:" + e.getMessage());
+            logger.error("getByteArrayByImagePath Exception:" + e.getMessage());
             return null;
         }
     }
@@ -76,6 +76,7 @@ public class CommonUtil {
     public static String generateJWTToken(String jwtSecret, User user) {
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList(user.getRoles().iterator().next().getRole());
+
         return Jwts
                 .builder()
                 .setId("softtekJWT")
@@ -93,8 +94,8 @@ public class CommonUtil {
 
     public static boolean validatePassword(String password1, String password2) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        log.info("password1: " + passwordEncoder.encode(password1));
-        log.info("password2: " + passwordEncoder.encode(password2));
+        logger.info("password1: " + passwordEncoder.encode(password1));
+        logger.info("password2: " + passwordEncoder.encode(password2));
         return passwordEncoder.matches(password1, password2);
     }
 
