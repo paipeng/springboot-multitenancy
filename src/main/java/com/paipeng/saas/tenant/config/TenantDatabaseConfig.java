@@ -73,7 +73,7 @@ public class TenantDatabaseConfig {
 
     @Bean(name = "tenantTransactionManager")
     public JpaTransactionManager transactionManager(
-            EntityManagerFactory tenantEntityManager) {
+            @Qualifier("tenantEntityManagerFactory") EntityManagerFactory tenantEntityManager) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(tenantEntityManager);
         return transactionManager;
